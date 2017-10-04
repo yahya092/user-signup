@@ -4,27 +4,47 @@ import cgi
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-@app.route("/")
-def index():    
-    return render_template('user_signup.html')
 
-@app.route("/welcome", methods=['POST'])
-def welcome():
+
+@app.route("/signup", methods=['POST'])
+def error():
     name = request.form['username']
+    password = request.form['user_password']
+    verify_password = request.form['verify_password']
+    email = request.form['email']
 
+    
     username_error = ''
+    password_error = ''
+    verify_error = ''
+    email_error = ''
+
     if len(name) < 3 or len(name) > 20:
         username_error = 'Not a valid username'
-        return render_template('user_signup.html',username_error=username_error)
-
-    password = request.form['password']
-    password_error = ''
+    
     if len(password) < 3 or len(password) > 20:
-        password_error = "That's not valid password"
-        return render_template('user_signup.html',password_error=password_error)
+        password_error = "That's not a valid password"
 
-    return render_template('greeting.html',username=name)
+    if verify_password != password:
+        verify_error = "Passwords don't match"
+    
+    if len(email) == 3 or len(email) > 20 or '@' not in email or '.' not in email or '' not in email:
+        email_error = "Not a valid email"
 
+    if not password_error and not username_error and not verify_error and not email_error:
+        return render_template("greeting.html",username=name)
+    else:
+        return render_template("user_signup.html",
+            username_error=username_error,
+            password_error=password_error,
+            verify_error=verify_error,
+            email_error=email_error)
+
+
+
+@app.route("/")
+def index():  
+    return render_template('user_signup.html')
 
 app.run()
 
