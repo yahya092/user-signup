@@ -6,7 +6,7 @@ app.config['DEBUG'] = True
 
 
 
-@app.route("/error", methods=['POST'])
+@app.route("/", methods=['POST'])
 def error():
     name = request.form['username']
     password = request.form['user_password']
@@ -36,6 +36,8 @@ def error():
         return redirect(url_for('welcome',username=name))
     else:
         return render_template("user_signup.html",
+            username=name,
+            email=email,
             username_error=username_error,
             password_error=password_error,
             verify_error=verify_error,
@@ -44,7 +46,7 @@ def error():
 @app.route("/welcome")
 def welcome():
     user_name = request.args.get("username")
-    return render_template("greeting.html",username=user_name)
+    return render_template("greeting.html",username=cgi.escape(user_name))
 
 @app.route("/")
 def index():  
