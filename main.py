@@ -28,8 +28,9 @@ def error():
     if verify_password != password:
         verify_error = "Passwords don't match"
     
-    if len(email) == 3 or len(email) > 20 or '@' not in email or '.' not in email or '' not in email:
-        email_error = "Not a valid email"
+    if len(email) != 0:
+        if len(email) == 1 or len(email) == 2 or len(email) ==3 or len(email) > 20  or '@' not in email or '.' not in email or " " in email:
+            email_error = "Not a valid email"
 
     if not password_error and not username_error and not verify_error and not email_error:
         return render_template("greeting.html",username=name)
